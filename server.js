@@ -1,6 +1,6 @@
 //import express.js
 const express = require('express');
-
+const inputCheck = require('./utils/inputCheck');
 const db = require('./db/connection');
 //port designation and app expression
 const PORT = process.env.PORT || 3001;
@@ -60,16 +60,28 @@ app.delete('/api/employee/:id', (req, res) => {
 
 
 //add an employee
-// const sql = `INSERT INTO employees (id, first_name, last_name, role_id, dept_id, salary, manager_id)
-//             VALUES (?, ?, ?, ?, ?, ?, ?)`;
-// const params = [10, 'Ronald', 'Firbank', 1, 1, 100000, 1];
+app.post('/api/employee', ({ body }, res) => {
+    const errors = inputCheck(body, 'first_name', 'last_name', 'role_id', 'dept_id', 'salary', 'manager_id');
+    if (errors) {
+        res.status(400).json({ error: errors });
+        return;
+    }
+    const sql = `INSERT INTO employees (first_name, last_name, role_id, dept_id, salary, manager_id)
+            VALUES (?, ?, ?, ?, ?, ?)`;
+    const params = [body.first_name, body.last_name, body.role_id, body.dept_id, body.salary, body.manager_id];
 
-// db.query(sql, params, (err, result) => {
-//     if (err) {
-//         console.log(err);
-//     }
-//     console.log(result);
-// });
+    db.query(sql, params, (err, result) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({
+            message: 'success',
+            data: body
+        });
+    });
+});
+
 
 
 
