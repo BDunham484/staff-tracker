@@ -1,4 +1,8 @@
 /*create employees table*/
+DROP TABLE IF EXISTS employees;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS department;
+
 CREATE TABLE employees (
     id INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,
     first_name VARCHAR(30) NOT NULL,
