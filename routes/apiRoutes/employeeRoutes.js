@@ -20,7 +20,7 @@ router.get('/employees', (req, res) => {
 });
 
 
-//delete an employee
+//delete an employee via a mysql query wrapped in an express.js path/api endpoint
 router.delete('/employee/:id', (req, res) => {
     const sql = `DELETE FROM employees WHERE id = ?`;
     const params = [req.params.id];
@@ -44,7 +44,7 @@ router.delete('/employee/:id', (req, res) => {
 });
 
 
-//add an employee
+//add an employee via a mysql query wrapped in an express.js path/api endpoint
 router.post('/employee', ({ body }, res) => {
     const errors = inputCheck(body, 'first_name', 'last_name', 'role_id', 'dept_id', 'salary', 'manager_id');
     if (errors) {
