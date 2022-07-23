@@ -1,5 +1,12 @@
+SELECT id, name AS department_name
+    FROM department;
+
+SELECT roles.id, roles.title, department.name, roles.salary
+    FROM roles
+    LEFT JOIN department On roles.department_id = department.id;
+
 /*select statement to grab and display employees*/
-SELECT e.first_name, e.last_name, roles.title AS role, roles.salary, department.name AS department, CONCAT(m.first_name, ' ', m.last_name) AS manager
+SELECT e.id, e.first_name, e.last_name, roles.title AS role, roles.salary, department.name AS department, CONCAT(m.first_name, ' ', m.last_name) AS manager
     FROM employees e
     LEFT JOIN roles ON e.role_id = roles.id
     LEFT JOIN department ON roles.department_id = department.id
