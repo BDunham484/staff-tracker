@@ -5,7 +5,18 @@ const inputCheck = require('../../utils/inputCheck');
 
 //get all employees via a mysql query wrapped in an express.js path/api endpoint
 router.get('/employees', (req, res) => {
-    const sql = `SELECT * FROM employees`;
+    const sql = `
+    SELECT employees.*, roles.title
+                AS role,
+                salary,
+                name
+                AS department
+                FROM employees
+                LEFT JOIN roles
+                ON employees.role_id = roles.id
+                LEFT JOIN department
+                ON roles.department_id = department.id
+                `;
 
     db.query(sql, (err, rows) => {
         if (err) {
@@ -46,14 +57,14 @@ router.delete('/employee/:id', (req, res) => {
 
 //add an employee via a mysql query wrapped in an express.js path/api endpoint
 router.post('/employee', ({ body }, res) => {
-    const errors = inputCheck(body, 'first_name', 'last_name', 'role_id', 'dept_id', 'salary', 'manager_id');
+    const errors = inputCheck(body, 'first_name', 'last_name', 'role_id', 'manager_id');
     if (errors) {
         res.status(400).json({ error: errors });
         return;
     }
-    const sql = `INSERT INTO employees (first_name, last_name, role_id, dept_id, salary, manager_id)
+    const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
             VALUES (?, ?, ?, ?, ?, ?)`;
-    const params = [body.first_name, body.last_name, body.role_id, body.dept_id, body.salary, body.manager_id];
+    const params = [body.first_name, body.last_name, body.role_id, body.manager_id];
 
     db.query(sql, params, (err, result) => {
         if (err) {
