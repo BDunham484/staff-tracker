@@ -1,7 +1,7 @@
 SELECT id, name AS department_name
     FROM department;
 
-SELECT roles.id, roles.title, department.name, roles.salary
+SELECT roles.id, roles.title, department.name AS department, roles.salary
     FROM roles
     LEFT JOIN department On roles.department_id = department.id;
 

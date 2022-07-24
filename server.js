@@ -2,7 +2,7 @@
 const express = require('express');
 const inputCheck = require('./utils/inputCheck');
 const db = require('./db/connection');
-const apiRoutes = require('./routes/apiRoutes');
+// const apiRoutes = require('./routes/apiRoutes');
 //port designation and app expression
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -11,13 +11,13 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.use('/api', apiRoutes);
+// app.use('/api', apiRoutes);
 
-app.get('/', (req, res) => {
-    res.json({
-        message: "Connection Established"
-    });
-});
+// app.get('/', (req, res) => {
+//     res.json({
+//         message: "Connection Established"
+//     });
+// });
 
 
 
