@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const db = require('./db');
 const { getEmp, addEmp, getRoles, getDept } = require('./lib/getTables');
-const { getEmpNames } = require('./lib/getListChoices');
+const { getEmpNames, getEmpNamesNoNull } = require('./lib/getListChoices');
 require("console.table");
 
 
@@ -45,6 +45,10 @@ const startTracker = () => {
                 {
                     name: 'Add Department',
                     value: 'addDept'
+                },
+                {
+                    name: 'Update Employee Managers',
+                    value: 'updateMan'
                 }
             ]
         }
@@ -74,6 +78,9 @@ const startTracker = () => {
                 break;
             case 'addDept':
                 addDept();
+                break;
+            case 'updateMan':
+                startUpdateMan();
                 break;
             default:
                 startTracker();
@@ -298,6 +305,47 @@ const addDept = () => {
         console.log(`${res.addDept} has been added.`);
         init();
     })
+}
+
+
+
+
+//question to update an employees manager
+const startUpdateMan = () => {
+    const listEmp = () => {
+        getEmpNamesNoNull().then(names => {
+            return inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'name',
+                    message: "Which employee's manager would you like to update?",
+                    choices: names
+                }
+            ]).then(res => {
+                getMan(res);
+            })
+        })
+    }
+
+    const getMan = (res) => {
+        let data = res;
+        getEmpNames().then(names => {
+            return inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'manager_id',
+                    message: "Please select the new manager?",
+                    choices: names
+                }
+            ]).then(res => {
+                data.manager_id = res.manager_id;
+                db.updateMan(data);
+                console.log(`Employee's manager has been updated.`);
+                init();
+            })
+        })
+    }
+    listEmp();
 }
 
 const startOver = () => {

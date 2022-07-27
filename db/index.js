@@ -91,7 +91,7 @@ class DB {
                 INSERT INTO roles
                 (title, salary, department_id)
                 VALUES (?, ?, ?)`,
-            [data.title, data.salary, data.department]
+                [data.title, data.salary, data.department]
             )
     }
 
@@ -103,6 +103,17 @@ class DB {
                 (name)
                 VALUES (?)`,
             [data.addDept]
+            )
+    }
+
+    updateMan(data) {
+        return this.connection
+            .promise()
+            .query(`
+                UPDATE employees
+                SET manager_id = ?
+                WHERE id = ?`,
+                [data.manager_id, data.name]
             )
     }
 }
