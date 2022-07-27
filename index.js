@@ -1,9 +1,8 @@
 const inquirer = require('inquirer');
-const express = require('express');
-const connection = require('./db/connection');
 const db = require('./db');
 const { getEmp, addEmp, getRoles, getDept } = require('./lib/getTables');
-const { getEmpNames, getRolesList } = require('./lib/getListChoices');
+const { getEmpNames } = require('./lib/getListChoices');
+require("console.table");
 
 
 const init = () => {
@@ -67,14 +66,14 @@ const startTracker = () => {
                 startOver();
                 break;
             case 'addRole':
-                console.log(value);
+                addEmpRole();
                 break;
             case 'viewDept':
                 getDept()
                 startOver();
                 break;
             case 'addDept':
-                console.log(value);
+                addDept();
                 break;
             default:
                 startTracker();
@@ -165,7 +164,7 @@ const addEmpQuestions = () => {
 
 
 
-//update employee role question
+//update employee role questions
 const updateEmpRole = () => {
     const startUpdateRole = () => {
         db.findAllEmployeeNames()
@@ -210,12 +209,95 @@ const updateEmpRole = () => {
             ])
             .then(res => {
                 data.role_id = res.role_id;
-                console.log(data)
-                startOver();
+                db.updateEmployeeRole(data)
+                console.log("Role has been updated")
+                init();
             })
         })
     }
     startUpdateRole();
+}
+
+
+
+
+
+//questions to add a role
+const addEmpRole = () => {
+    db.findAllDepartments()
+    .then(([rows]) => {
+        let department = rows;
+        const deptChoices = department.map(({ id, department_name }) => ({
+            name: department_name,
+            value: id
+        }));
+
+        inquirer.prompt([
+            {
+                type: 'input',
+                name: 'title',
+                message: 'What is the name of the role?',
+                validate: titleInput => {
+                    if (titleInput) {
+                        return true;
+                    } else {
+                        console.log('Please enter a role')
+                        return false;
+                    }
+                }
+            },
+            {
+                type: 'input',
+                name: 'salary',
+                message: 'What is the salary of the role?',
+                validate: salaryInput => {
+                    if (salaryInput) {
+                        return true;
+                    } else {
+                        console.log('Please enter a salary.');
+                        return false;
+                    }
+                }
+            },
+            {
+                type: 'list',
+                name: 'department',
+                message: 'Which department does the role belong to?',
+                choices: deptChoices
+            }
+        ]).then(res => {
+            db.addRole(res);
+            console.log(`${res.title} has been added.`);
+            init();
+        })
+    })
+}
+
+
+
+
+//start add department question
+const addDept = () => {
+    return inquirer.prompt([
+        {
+            type: 'input', 
+            name: 'addDept',
+            message: 'What is the name of the department?',
+            validate: deptInput => {
+                if (deptInput) {
+                    return true;
+                } else {
+                    console.log('Please enter a department.');
+                    return false;
+                }
+            }
+        }
+    ])
+    .then(res => {
+        db.addDept(res);
+        console.log(`${res.addDept} has been added.`);
+        init();
+    })
 }
 
 const startOver = () => {

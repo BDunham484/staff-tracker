@@ -51,14 +51,14 @@ class DB {
             `)
     }
 
-    addEmployee(res) {
+    addEmployee(data) {
         return this.connection
             .promise()
             .query(`
                 INSERT INTO employees
                 (first_name, last_name, role_id, manager_id)
                 VALUES (?, ?, ?, ?)`,
-                [res.first_name, res.last_name, res.role_id, res.manager_id]
+                [data.first_name, data.last_name, data.role_id, data.manager_id]
             )
     }
 
@@ -71,6 +71,39 @@ class DB {
                 AS name
                 FROM employees
             `)
+    }
+
+    updateEmployeeRole(data) {
+        return this.connection
+            .promise()
+            .query(`
+                UPDATE employees
+                SET role_id = ?
+                WHERE id = ?`,
+                [data.role_id, data.empNames]
+            )
+    }
+
+    addRole(data) {
+        return this.connection
+            .promise()
+            .query(`
+                INSERT INTO roles
+                (title, salary, department_id)
+                VALUES (?, ?, ?)`,
+            [data.title, data.salary, data.department]
+            )
+    }
+
+    addDept(data) {
+        return this.connection
+            .promise()
+            .query(`
+                INSERT INTO department
+                (name)
+                VALUES (?)`,
+            [data.addDept]
+            )
     }
 }
 
