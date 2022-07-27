@@ -1,10 +1,15 @@
 const inquirer = require('inquirer');
 const express = require('express');
-const db = require('./db/connection');
-const { getEmp, addEmp, getRoles, getDept, getEmpNames } = require('./lib/getTables');
+const connection = require('./db/connection');
+const db = require('./db');
+const { getEmp, addEmp, getRoles, getDept } = require('./lib/getTables');
+const { getEmpNames, getRolesList } = require('./lib/getListChoices');
 
 
-
+const init = () => {
+    console.log("Employees, Departments, and Roles Interface")
+    startTracker();
+}
 
 
 const startTracker = () => {
@@ -52,10 +57,10 @@ const startTracker = () => {
                 startOver();
                 break;
             case 'addEmp':
-                startAddEmp();
+                addEmpQuestions();
                 break;
             case 'updateRole':
-                console.log(value);
+                updateEmpRole();
                 break;
             case 'viewRoles':
                 getRoles();
@@ -73,15 +78,13 @@ const startTracker = () => {
                 break;
             default:
                 startTracker();
-        };    
-    }); 
+        };
+    });
 };
 
 
-//questions to add new employee
-const startAddEmp = () => {
-    getEmpNames().then(names => {
-        console.log(names)
+const addEmpQuestions = () => {
+    const startAddEmp = () => {
         return inquirer.prompt([
             {
                 type: 'input',
@@ -108,71 +111,111 @@ const startAddEmp = () => {
                         return false;
                     };
                 }
-            },
-            {
-                type: 'list',
-                name: 'role_id',
-                message: "What is the employee's role?",
-                choices: [
-                    {
-                        name: 'Customer Service',
-                        value: 'customerService'
-                    },
-                    {
-                        name: 'Sales Lead',
-                        value: 1
-                    },
-                    {
-                        name: 'Salesperson',
-                        value: 2
-                    },
-                    {
-                        name: 'Lead Engineer',
-                        value: 3
-                    },
-                    {
-                        name: 'Software Engineer',
-                        value: 4
-                    },
-                    {
-                        name: 'Account Manager',
-                        value: 5
-                    },
-                    {
-                        name: 'Accountant',
-                        value: 6
-                    },
-                    {
-                        name: 'Legal Team Lead',
-                        value: 7
-                    },
-                    {
-                        name: 'Lawyer',
-                        value: 8
-                    }
-                ]
-            },
-            {
-                type: 'list',
-                name: 'manager_id',
-                message: "Who is the employee's manager?",
-                choices: names
             }
         ]).then(res => {
-        addEmp(res);
-        startOver();
+            getNewEmpRoles(res)
         })
-    })    
+    }
+    
+    
+    const getNewEmpRoles = (res) => {
+        let data = res;
+        db.findAllRoles()
+        .then(([rows]) => {
+            let roles = rows;
+            const roleChoices = roles.map(({ id, title }) => ({
+                name: title,
+                value: id
+            }));
+    
+            inquirer.prompt([
+                {
+                    type: 'list',
+                    name: "role_id",
+                    message: "What is the employee's role?",
+                    choices: roleChoices
+                }
+            ])
+            .then(res => {
+                data.role_id = res.role_id
+                endAddEmp(data)
+            });
+        });
+    };
+    
+    const endAddEmp = (res) => {
+        let data = res;
+        getEmpNames().then(names => {
+            return inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'manager_id',
+                    message: "Who is the employee's manager?",
+                    choices: names
+                }
+            ]).then(res => {
+                data.manager_id = res.manager_id;
+                addEmp(data);
+                startOver();
+            })
+        })
+    }
+    startAddEmp();
 }
 
 
-//update employee questions
-const startUpdateEmp = () => {
-    return inquirer.prompt([
-        {
-            type: 'list'
-        }
-    ])
+
+//update employee role question
+const updateEmpRole = () => {
+    const startUpdateRole = () => {
+        db.findAllEmployeeNames()
+        .then(([rows]) => {
+            let names = rows;
+            const empNames = names.map(({ id, name }) => ({
+                name: name,
+                value: id
+            }));
+
+            inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'empNames',
+                    message: "Which employee's role would you like to update?",
+                    choices: empNames
+                }
+            ])
+            .then(res => {
+                endUpdateRole(res);
+            })
+        })
+    }
+
+    const endUpdateRole = (res) => {
+        let data = res;
+        db.findAllRoles()
+        .then(([rows]) => {
+            let roles = rows;
+            const roleChoices = roles.map(({ id, title }) => ({
+                name: title,
+                value: id
+            }));
+
+            inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'role_id',
+                    message: 'Which role do you want to assign the selected employee?',
+                    choices: roleChoices
+                }
+            ])
+            .then(res => {
+                data.role_id = res.role_id;
+                console.log(data)
+                startOver();
+            })
+        })
+    }
+    startUpdateRole();
 }
 
 const startOver = () => {
@@ -182,6 +225,8 @@ const startOver = () => {
 }
 
 
-// getEmpNames();
-startTracker();
+
+
+init();
+
 

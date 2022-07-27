@@ -2,7 +2,7 @@
 const mysql = require('mysql2');
 
 //connect to database
-const db = mysql.createConnection(
+const connection = mysql.createConnection(
     {
         host: 'localhost',
         user: 'root',
@@ -12,5 +12,10 @@ const db = mysql.createConnection(
     console.log('Connected to the staff database.')
 )
 
+connection.connect(function (err) {
+    if (err) throw err;
+    
+});
+
 //export db
-module.exports = db;
+module.exports = connection;

@@ -1,4 +1,4 @@
-
+USE staff;
 
 INSERT INTO department (name)
 VALUES

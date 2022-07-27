@@ -1,3 +1,8 @@
+DROP DATABASE IF EXISTS staff;
+CREATE DATABASE staff;
+USE staff;
+
+
 /*create employees table*/
 DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS roles;
@@ -15,7 +20,7 @@ CREATE TABLE roles (
     title VARCHAR(30) NOT NULL,
     department_id INTEGER,
     salary DECIMAL(10,2),
-    FOREIGN KEY (department_id) REFERENCES department(id) ON DELETE SET NULL
+    CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES department(id) ON DELETE CASCADE
 );
 /*create employees table*/
 CREATE TABLE employees (
@@ -24,7 +29,7 @@ CREATE TABLE employees (
     last_name VARCHAR(30) NOT NULL,
     role_id INTEGER,
     manager_id INTEGER,
-    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE SET NULL
+    CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
     -- FOREIGN KEY (manager_id) REFERENCES employees(id) ON DELETE SET NULL
 );
 
