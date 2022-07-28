@@ -1,6 +1,7 @@
+/*select statement to grab and display departments*/
 SELECT id, name AS department_name
     FROM department;
-
+/*select statement to grab and display roles*/
 SELECT roles.id, roles.title, department.name AS department, roles.salary
     FROM roles
     LEFT JOIN department On roles.department_id = department.id;

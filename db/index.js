@@ -1,5 +1,7 @@
+//import database connection
 const connection = require('./connection');
 
+//a class named DB that houses all of the database queries
 class DB {
     constructor(connection) {
         this.connection = connection;

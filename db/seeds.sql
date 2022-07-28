@@ -1,12 +1,13 @@
+/*instruct to use the staff database*/
 USE staff;
-
+/*assign values to the 'department' table*/
 INSERT INTO department (name)
 VALUES
     ('Sales'),
     ('Engineering'),
     ('Finance'),
     ('Legal');
-
+/*assign values to the 'roles' table*/
 INSERT INTO roles (title, department_id, salary)
 VALUES
     ('Sales Lead', 1, 100000),
@@ -17,7 +18,7 @@ VALUES
     ('Accountant', 3, 125000),
     ('Legal Team Lead', 4, 250000),
     ('Lawyer', 4, 190000);
-
+/*assign values to the 'employees' table*/
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES
     ('John', 'Doe', 1, NULL),

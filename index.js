@@ -1,16 +1,20 @@
+//import inquirer
 const inquirer = require('inquirer');
+//import db directory and access to the DB constructor methods
 const db = require('./db');
+//import functions that display tables
 const { getEmp, addEmp, getRoles, getDept, getEmpByManager, getEmpByDept, getBudgByDept } = require('./lib/getTables');
+//import functions that display lists of employee names
 const { getEmpNames, getEmpNamesNoNull } = require('./lib/getListChoices');
 require("console.table");
-
+//function call to clear screen when user enacts a keystroke
 clearScreen();
-
+//function to initialize app
 const init = () => {
     console.log("Employees, Departments, and Roles Interface")
     startTracker();
 }
-
+//function to clear screen on keystroke
 function clearScreen() {
     process.stdin.on('keypress', (str, key) => {
         if (key) {
@@ -19,7 +23,7 @@ function clearScreen() {
     });
 }
 
-
+//funtion that holds initial question and switch case that routes the response
 const startTracker = () => {
     return inquirer.prompt([
         {
@@ -139,7 +143,7 @@ const startTracker = () => {
     });
 };
 
-
+//function that houses a series of questions/functions to add an employtee
 const addEmpQuestions = () => {
     const startAddEmp = () => {
         return inquirer.prompt([
@@ -361,7 +365,7 @@ const addDept = () => {
 
 
 
-//question to update an employees manager
+//questions to update an employees manager
 const startUpdateMan = () => {
     const listEmp = () => {
         getEmpNamesNoNull().then(names => {
@@ -460,7 +464,7 @@ const startByDept = () => {
 
 
 
-//questi0n to start department deletions
+//question to start department deletions
 const startDelDept = () => {
     db.findAllDepartments()
     .then(([rows]) => {
@@ -574,7 +578,7 @@ const startBudgets = () => {
     })
 }
 
-
+//function to start questions over after a second
 const startOver = () => {
     setTimeout(() => {
         startTracker();
@@ -583,7 +587,7 @@ const startOver = () => {
 
 
 
-
+//initialize app function call
 init();
 
 
