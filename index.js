@@ -4,10 +4,19 @@ const { getEmp, addEmp, getRoles, getDept, getEmpByManager, getEmpByDept, getBud
 const { getEmpNames, getEmpNamesNoNull } = require('./lib/getListChoices');
 require("console.table");
 
+clearScreen();
 
 const init = () => {
     console.log("Employees, Departments, and Roles Interface")
     startTracker();
+}
+
+function clearScreen() {
+    process.stdin.on('keypress', (str, key) => {
+        if (key) {
+            console.clear();
+        }
+    });
 }
 
 
