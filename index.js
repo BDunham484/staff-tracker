@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const db = require('./db');
-const { getEmp, addEmp, getRoles, getDept } = require('./lib/getTables');
+const { getEmp, addEmp, getRoles, getDept, getEmpByManager } = require('./lib/getTables');
 const { getEmpNames, getEmpNamesNoNull } = require('./lib/getListChoices');
 require("console.table");
 
@@ -49,6 +49,10 @@ const startTracker = () => {
                 {
                     name: 'Update Employee Managers',
                     value: 'updateMan'
+                },
+                {
+                    name: "View Employee's by Manager.",
+                    value: 'byManager'
                 }
             ]
         }
@@ -81,6 +85,9 @@ const startTracker = () => {
                 break;
             case 'updateMan':
                 startUpdateMan();
+                break;
+            case 'byManager':
+                startByManager();
                 break;
             default:
                 startTracker();
@@ -346,6 +353,38 @@ const startUpdateMan = () => {
         })
     }
     listEmp();
+}
+
+
+
+
+//question to view employees by manager
+const startByManager = () => {
+    const getByMan = () => {
+        db.findManagers()
+        .then(([rows]) => {
+            let managers = rows;
+            const managerChoices = managers.map(({ id, name }) => ({
+                name: name,
+                value: id 
+            }));
+
+            inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'manager_id',
+                    message: "Which manager's employee's would you like to see?",
+                    choices: managerChoices
+                }
+            ])
+            .then(res => {
+                getEmpByManager(res);
+                startOver();
+            })
+        })
+    }
+
+    getByMan();
 }
 
 const startOver = () => {

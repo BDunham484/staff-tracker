@@ -116,6 +116,42 @@ class DB {
                 [data.manager_id, data.name]
             )
     }
+
+    findManagers() {
+        return this.connection
+            .promise()
+            .query(`
+                SELECT first_name, last_name, id,
+                CONCAT(first_name, ' ', last_name)
+                AS name
+                FROM employees
+                WHERE manager_id IS NULL 
+            `)
+    }
+
+    findEmployeesByManager(data) {
+        return this.connection
+            .promise()
+            .query(`
+                SELECT e.id,
+                e.first_name, 
+                e.last_name, 
+                roles.title 
+                AS role, 
+                roles.salary, 
+                department.name 
+                AS department, 
+                CONCAT(m.first_name, ' ', m.last_name)
+                AS manager 
+                FROM employees e 
+                LEFT JOIN roles ON e.role_id = roles.id 
+                LEFT JOIN department ON roles.department_id = department.id 
+                LEFT JOIN employees m ON e.manager_id = m.id
+                WHERE e.manager_id = ? `,
+                [data.manager_id]
+            )
+    }
 }
 
 module.exports = new DB(connection)
+
