@@ -57,6 +57,18 @@ const startTracker = () => {
                 {
                     name: 'View Employees By Department',
                     value: 'byDepartment'
+                },
+                {
+                    name: 'Delete Departments',
+                    value: 'delDept'
+                },
+                {
+                    name: 'Delete Roles',
+                    value: 'delRole'
+                },
+                {
+                    name: 'Delete Employees',
+                    value: 'delEmp'
                 }
             ]
         }
@@ -95,6 +107,15 @@ const startTracker = () => {
                 break;
             case 'byDepartment':
                 startByDept();
+                break;
+            case 'delDept':
+                startDelDept();
+                break;
+            case 'delRole':
+                startDelRole();
+                break;
+            case 'delEmp':
+                startDelEmp();
                 break;
             default:
                 startTracker();
@@ -418,6 +439,96 @@ const startByDept = () => {
         })
     })
 }
+
+
+
+
+
+//questi0n to start department deletions
+const startDelDept = () => {
+    db.findAllDepartments()
+    .then(([rows]) => {
+        let departments = rows;
+        const deptChoices = departments.map(({ id, department_name }) => ({
+            name: department_name,
+            value: id 
+        }));
+
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'department_id',
+                message: "Which department's would you like to delete?",
+                choices: deptChoices
+            }
+        ])
+        .then(res => {
+            db.deleteDepartment(res)
+            console.log("The department has been deleted.")
+            startOver();
+        })
+    })
+}
+
+
+
+
+
+//question to start role deletions
+const startDelRole = () => {
+    db.findAllRoles()
+    .then(([rows]) => {
+        let roles = rows;
+        const roleChoices = roles.map(({ id, title }) => ({
+            name: title,
+            value: id
+        }));
+
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: "role_id",
+                message: "Which role would you like to delete?",
+                choices: roleChoices
+            }
+        ])
+        .then(res => {
+            db.deleteRole(res);
+            console.log("The role has been deleted.");
+            init();
+        });
+    });
+}
+
+
+
+
+//question to start employee deletion
+const startDelEmp = () => {
+    db.findAllEmployeeNames()
+        .then(([rows]) => {
+            let names = rows;
+            const empNames = names.map(({ id, name }) => ({
+                name: name,
+                value: id
+            }));
+
+            inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'empNames',
+                    message: "Which employee's would you like to delete?",
+                    choices: empNames
+                }
+            ])
+            .then(res => {
+                db.deleteEmployee(res);
+                console.log("Employee has been deleted.");
+                init();
+            })
+        })
+}
+
 
 const startOver = () => {
     setTimeout(() => {

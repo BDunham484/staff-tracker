@@ -174,6 +174,36 @@ class DB {
                 [data.department_id]
             )
     }
+
+    deleteDepartment(data) {
+        return this.connection
+            .promise()
+            .query(`
+                DELETE FROM department
+                WHERE id = ?`,
+                [data.department_id]
+            )
+    }
+
+    deleteRole(data) {
+        return this.connection
+            .promise()
+            .query(`
+                DELETE FROM roles
+                WHERE id = ?`,
+                [data.role_id]
+            )
+    }
+    
+    deleteEmployee(data) {
+        return this.connection
+            .promise()
+            .query(`
+                DELETE FROM employees
+                WHERE id = ?`,
+                [data.empNames]
+            )
+    }
 }
 
 module.exports = new DB(connection)
