@@ -9,6 +9,7 @@
 ![staff-tracker](./assets/images/staff-tracker.png)
 
 * <a href='https://github.com/BDunham484/staff-tracker'>https://github.com/BDunham484/staff-tracker</a>
+* <a href='https://drive.google.com/file/d/1eudP2TEklDqPv5dckrqmsNlG9JRNzWFG/view'>Demonstration Video</a>
 
 ## Table of Contents
 
