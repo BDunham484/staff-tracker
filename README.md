@@ -6,7 +6,7 @@
 
 * A CLI CMS to manage an employee database using Node.js, Inquirer, and MySQL
 
-![staff-tracker](./assets/image/staff-tracker.png)
+![staff-tracker](./assets/images/staff-tracker.png)
 
 * <a href='https://github.com/BDunham484/staff-tracker'>https://github.com/BDunham484/staff-tracker</a>
 
