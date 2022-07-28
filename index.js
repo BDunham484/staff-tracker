@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const db = require('./db');
-const { getEmp, addEmp, getRoles, getDept, getEmpByManager, getEmpByDept } = require('./lib/getTables');
+const { getEmp, addEmp, getRoles, getDept, getEmpByManager, getEmpByDept, getBudgByDept } = require('./lib/getTables');
 const { getEmpNames, getEmpNamesNoNull } = require('./lib/getListChoices');
 require("console.table");
 
@@ -69,6 +69,10 @@ const startTracker = () => {
                 {
                     name: 'Delete Employees',
                     value: 'delEmp'
+                },
+                {
+                    name: 'View budget per department',
+                    value: 'getBudgets'
                 }
             ]
         }
@@ -116,6 +120,9 @@ const startTracker = () => {
                 break;
             case 'delEmp':
                 startDelEmp();
+                break;
+            case 'getBudgets':
+                startBudgets();
                 break;
             default:
                 startTracker();
@@ -527,6 +534,35 @@ const startDelEmp = () => {
                 init();
             })
         })
+}
+
+
+
+
+
+//start questions to get budgets
+const startBudgets = () => {
+    db.findAllDepartments()
+    .then(([rows]) => {
+        let departments = rows;
+        const deptChoices = departments.map(({ id, department_name }) => ({
+            name: department_name,
+            value: id 
+        }));
+
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'department_id',
+                message: "Which department's budget would you like to see?",
+                choices: deptChoices
+            }
+        ])
+        .then(res => {
+            getBudgByDept(res);
+            startOver();
+        })
+    })
 }
 
 

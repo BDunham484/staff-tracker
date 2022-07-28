@@ -204,6 +204,18 @@ class DB {
                 [data.empNames]
             )
     }
+
+    getBudgetByDepartment(data) {
+        return this.connection
+            .promise()
+            .query(`
+                SELECT sum(salary)
+                AS total
+                FROM roles
+                WHERE department_id = ?`,
+                [data.department_id]
+            )
+    }
 }
 
 module.exports = new DB(connection)
