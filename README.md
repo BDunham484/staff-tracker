@@ -28,51 +28,28 @@
 
 ![staff-tracker](./assets/images/staff-tracker-install.png)
 
-Back to [top of page](# )
-
 ## Usage
 
 * To begin, enter `node index` in the command line.  You will then be presented with the initial prompt to begin the application
 
 
-
-Back to [top of page](# )
-
 ## License
 
 * This application is covered under the <a href='https://opensource.org/licenses/MIT'>MIT License</a>.
 
-Back to [top of page](# )
+## Made with
 
+* JavaScript
+* Node.js
+* MySQL
+* Inquirer v. 8.2.4
 
-## Code Contributors
-
-#### Made with ❤️ by:
+## Made with ❤️ by:
 
 * Brad Dunham
 
 
 
-Back to [top of page](# )
-
-## Contributing
-
-Feel free to submit an issue
-
-Back to [top of page](# )
-
-## Test
-
-* No TDD at the moment
-
-
-
-Back to [top of page](# )
-
-## Questions?
-
-* If you have any questions you can find me here: <https://www.github.com/BDunham484>
-* You can also reach me here: bdunham484@gmail.com
 
 Back to [top of page](# )
 
