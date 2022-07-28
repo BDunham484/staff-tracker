@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const db = require('./db');
-const { getEmp, addEmp, getRoles, getDept, getEmpByManager } = require('./lib/getTables');
+const { getEmp, addEmp, getRoles, getDept, getEmpByManager, getEmpByDept } = require('./lib/getTables');
 const { getEmpNames, getEmpNamesNoNull } = require('./lib/getListChoices');
 require("console.table");
 
@@ -51,8 +51,12 @@ const startTracker = () => {
                     value: 'updateMan'
                 },
                 {
-                    name: "View Employee's by Manager.",
+                    name: "View Employee's By Manager",
                     value: 'byManager'
+                },
+                {
+                    name: 'View Employees By Department',
+                    value: 'byDepartment'
                 }
             ]
         }
@@ -88,6 +92,9 @@ const startTracker = () => {
                 break;
             case 'byManager':
                 startByManager();
+                break;
+            case 'byDepartment':
+                startByDept();
                 break;
             default:
                 startTracker();
@@ -360,31 +367,56 @@ const startUpdateMan = () => {
 
 //question to view employees by manager
 const startByManager = () => {
-    const getByMan = () => {
-        db.findManagers()
-        .then(([rows]) => {
-            let managers = rows;
-            const managerChoices = managers.map(({ id, name }) => ({
-                name: name,
-                value: id 
-            }));
+    db.findManagers()
+    .then(([rows]) => {
+        let managers = rows;
+        const managerChoices = managers.map(({ id, name }) => ({
+            name: name,
+            value: id 
+        }));
 
-            inquirer.prompt([
-                {
-                    type: 'list',
-                    name: 'manager_id',
-                    message: "Which manager's employee's would you like to see?",
-                    choices: managerChoices
-                }
-            ])
-            .then(res => {
-                getEmpByManager(res);
-                startOver();
-            })
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'manager_id',
+                message: "Which manager's employee's would you like to see?",
+                choices: managerChoices
+            }
+        ])
+        .then(res => {
+            getEmpByManager(res);
+            startOver();
         })
-    }
+    });
+};
 
-    getByMan();
+
+
+
+
+//questions to view employees by department
+const startByDept = () => {
+    db.findAllDepartments()
+    .then(([rows]) => {
+        let departments = rows;
+        const deptChoices = departments.map(({ id, department_name }) => ({
+            name: department_name,
+            value: id 
+        }));
+
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'department_id',
+                message: "Which department's employee's would you like to see?",
+                choices: deptChoices
+            }
+        ])
+        .then(res => {
+            getEmpByDept(res);
+            startOver();
+        })
+    })
 }
 
 const startOver = () => {
